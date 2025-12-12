@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your AI Pair Programmer | Agentic Coding Tool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0D0D0D;
+            --bg-surface: #1A1A1A;
+            --text-primary: #E8E8E8;
+            --accent-green: #00FF88;
+            --accent-red: #FF6B6B;
+            --border-color: rgba(0, 255, 136, 0.2);
+            --glow-green: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Scanline overlay effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.3;
+        }
+
+        /* Grid background */
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(13, 13, 13, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            text-shadow: var(--glow-green);
+        }
+
+        .logo::before {
+            content: '> ';
+            color: var(--accent-green);
+        }
+
+        .nav-cta {
+            padding: 0.6rem 1.5rem;
+            background: transparent;
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-cta:hover {
+            background: var(--accent-green);
+            color: var(--bg-primary);
+            box-shadow: var(--glow-green);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 2rem 4rem;
+            z-index: 1;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: var(--glow-green);
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 3rem;
+            background: var(--accent-green);
+            animation: blink 1s infinite;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            color: rgba(232, 232, 232, 0.8);
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+        }
+
+        .cta-primary {
+            padding: 1rem 2.5rem;
+            background: var(--accent-green);
+            color: var(--bg-primary);
+            border: none;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: var(--glow-green);
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(0, 255, 136, 0.8), 0 0 40px rgba(0, 255, 136, 0.4); }
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.8), 0 0 60px rgba(0, 255, 136, 0.4);
+        }
+
+        /* Terminal Demo */
+        .terminal-demo {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.1);
+        }
+
+        .terminal-header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-red);
+        }
+
+        .terminal-button:nth-child(2) {
+            background: #FFB800;
+        }
+
+        .terminal-button:nth-child(3) {
+            background: var(--accent-green);
+        }
+
+        .terminal-body {
+            padding: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 400px;
+        }
+
+        .terminal-line {
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        .terminal-line:nth-child(1) { animation-delay: 0.5s; }
+        .terminal-line:nth-child(2) { animation-delay: 1s; }
+        .terminal-line:nth-child(3) { animation-delay: 1.5s; }
+        .terminal-line:nth-child(4) { animation-delay: 2s; }
+        .terminal-line:nth-child(5) { animation-delay: 2.5s; }
+        .terminal-line:nth-child(6) { animation-delay: 3s; }
+        .terminal-line:nth-child(7) { animation-delay: 3.5s; }
+        .terminal-line:nth-child(8) { animation-delay: 4s; }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .prompt {
+            color: var(--accent-green);
+        }
+
+        .comment {
+            color: rgba(232, 232, 232, 0.5);
+        }
+
+        .success {
+            color: var(--accent-green);
+        }
+
+        .keyword {
+            color: #FF6B6B;
+        }
+
+        .string {
+            color: #FFB800;
+        }
+
+        /* ASCII Art Divider */
+        .ascii-divider {
+            text-align: center;
+            padding: 4rem 2rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            color: var(--border-color);
+            line-height: 1.2;
+            overflow-x: auto;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--accent-green);
+            text-shadow: var(--glow-green);
+        }
+
+        .section-title::before {
+            content: '$ ';
+            color: var(--accent-green);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: rgba(232, 232, 232, 0.6);
+            margin-bottom: 4rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-green);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent-green);
+            box-shadow: var(--glow-green);
+            transform: translateY(-5px);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: rgba(232, 232, 232, 0.7);
+            line-height: 1.8;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(var(--glow-green));
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 6rem 2rem;
+            background: rgba(26, 26, 26, 0.5);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            z-index: 1;
+        }
+
+        .how-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--accent-green);
+            border-radius: 50%;
+            line-height: 56px;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--glow-green);
+        }
+
+        .step h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .step p {
+            color: rgba(232, 232, 232, 0.7);
+        }
+
+        .step::after {
+            content: '→';
+            position: absolute;
+            top: 30px;
+            right: -2rem;
+            font-size: 2rem;
+            color: var(--accent-green);
+            opacity: 0.3;
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        /* Final CTA Section */
+        .final-cta {
+            padding: 8rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .final-cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 4rem 3rem;
+            position: relative;
+        }
+
+        .final-cta-container::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(45deg, var(--accent-green), var(--accent-red), var(--accent-green));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            animation: border-flow 3s linear infinite;
+        }
+
+        @keyframes border-flow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .final-cta h2 {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.5rem;
+            color: var(--accent-green);
+            margin-bottom: 1.5rem;
+            text-shadow: var(--glow-green);
+        }
+
+        .final-cta p {
+            font-size: 1.2rem;
+            color: rgba(232, 232, 232, 0.8);
+            margin-bottom: 2.5rem;
+        }
+
+        .command-preview {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            font-family: 'Fira Code', monospace;
+            text-align: left;
+            color: var(--accent-green);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem;
+            text-align: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: rgba(232, 232, 232, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        footer::before {
+            content: '// End of transmission';
+            display: block;
+            margin-bottom: 1rem;
+            color: var(--accent-green);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .step::after {
+                content: '↓';
+                top: auto;
+                bottom: -2.5rem;
+                right: 50%;
+                transform: translateX(50%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+
+            .hero {
+                padding: 6rem 1rem 3rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+
+            .typing-cursor {
+                height: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .terminal-body {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+
+            .features, .how-it-works, .final-cta {
+                padding: 4rem 1rem;
+            }
+
+            .final-cta-container {
+                padding: 3rem 2rem;
+            }
+
+            .final-cta h2 {
+                font-size: 1.8rem;
+            }
+
+            .ascii-divider {
+                font-size: 0.5rem;
+            }
+        }
+
+        /* Glitch effect on hover */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch:hover {
+            animation: glitch 0.3s ease;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-background"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">AI.CODE</div>
+            <a href="#cta" class="nav-cta">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>
+                    Code Smarter,<br>Ship Faster<span class="typing-cursor"></span>
+                </h1>
+                <p>An autonomous AI coding assistant that understands context, writes production-ready code, and integrates seamlessly into your workflow.</p>
+                <a href="#cta" class="cta-primary glitch">Start Coding</a>
+            </div>
+            <div class="terminal-demo">
+                <div class="terminal-header">
+                    <div class="terminal-button"></div>
+                    <div class="terminal-button"></div>
+                    <div class="terminal-button"></div>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line"><span class="prompt">$</span> ai create auth middleware</div>
+                    <div class="terminal-line"><span class="comment">// Analyzing project structure...</span></div>
+                    <div class="terminal-line"><span class="comment">// Reading existing auth patterns...</span></div>
+                    <div class="terminal-line"><span class="success">✓ Created middleware/auth.js</span></div>
+                    <div class="terminal-line"><span class="success">✓ Updated routes/api.js</span></div>
+                    <div class="terminal-line"><span class="success">✓ Added tests/auth.test.js</span></div>
+                    <div class="terminal-line"></div>
+                    <div class="terminal-line"><span class="prompt">$</span> <span class="cursor-blink">_</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ASCII Divider -->
+    <div class="ascii-divider">
+        ═══════════════════════════════════════════════════════════════════════════════
+    </div>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-container">
+            <h2 class="section-title">Features</h2>
+            <p class="section-subtitle">// Autonomous coding capabilities</p>
+
+            <div class="features-grid">
+                <div class="feature-card glitch">
+                    <div class="feature-number">[01]</div>
+                    <div class="feature-icon">⚡</div>
+                    <h3>AI Code Generation</h3>
+                    <p>Transform natural language prompts into production-ready code. Our AI understands context, follows best practices, and writes clean, maintainable code that fits your project's style.</p>
+                </div>
+
+                <div class="feature-card glitch">
+                    <div class="feature-number">[02]</div>
+                    <div class="feature-icon">🔄</div>
+                    <h3>Multi-File Editing</h3>
+                    <p>Handle complex refactors across your entire codebase with ease. Edit multiple files simultaneously, maintain consistency, and let AI manage the intricate dependencies.</p>
+                </div>
+
+                <div class="feature-card glitch">
+                    <div class="feature-number">[03]</div>
+                    <div class="feature-icon">🔧</div>
+                    <h3>Tool Integration</h3>
+                    <p>Seamlessly works with git, terminal commands, APIs, and your existing development workflow. No disruption, just enhanced productivity.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="how-container">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">// Three steps to AI-powered development</p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Describe Your Intent</h3>
+                    <p>Tell the AI what you want to build in natural language. No need for detailed specifications.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>AI Analyzes & Codes</h3>
+                    <p>The AI understands your codebase context and writes production-ready code across multiple files.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Review & Ship</h3>
+                    <p>Review the changes, run tests, and ship faster. The AI handles the heavy lifting.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ASCII Divider -->
+    <div class="ascii-divider">
+        ═══════════════════════════════════════════════════════════════════════════════
+    </div>
+
+    <!-- Final CTA -->
+    <section class="final-cta" id="cta">
+        <div class="final-cta-container">
+            <h2>Ready to Transform Your Development Workflow?</h2>
+            <p>Join thousands of developers who are coding smarter and shipping faster with AI.</p>
+
+            <div class="command-preview">
+                <span class="prompt">$</span> npm install -g ai-code-assistant
+            </div>
+
+            <a href="#" class="cta-primary glitch">Get Started Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 AI.CODE - Your AI Pair Programmer. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Terminal typing effect for cursor
+        const terminalCursor = document.querySelector('.cursor-blink');
+        if (terminalCursor) {
+            setInterval(() => {
+                terminalCursor.style.opacity = terminalCursor.style.opacity === '0' ? '1' : '0';
+            }, 500);
+        }
+
+        // Intersection Observer for animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards
+        document.querySelectorAll('.feature-card, .step').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Add glitch effect on random intervals to certain elements
+        function randomGlitch() {
+            const glitchElements = document.querySelectorAll('.section-title');
+            const randomElement = glitchElements[Math.floor(Math.random() * glitchElements.length)];
+            if (randomElement) {
+                randomElement.style.animation = 'none';
+                setTimeout(() => {
+                    randomElement.style.animation = 'glitch 0.3s ease';
+                }, 10);
+            }
+        }
+
+        // Trigger random glitch every 5-10 seconds
+        setInterval(randomGlitch, Math.random() * 5000 + 5000);
+
+        // Terminal demo enhancement - add more realistic typing
+        const terminalBody = document.querySelector('.terminal-body');
+        if (terminalBody) {
+            // Add hover effect to terminal
+            terminalBody.parentElement.addEventListener('mouseenter', function() {
+                this.style.boxShadow = '0 0 60px rgba(0, 255, 136, 0.2)';
+            });
+            terminalBody.parentElement.addEventListener('mouseleave', function() {
+                this.style.boxShadow = '0 0 40px rgba(0, 255, 136, 0.1)';
+            });
+        }
+
+        // CTA button pulse on scroll into view
+        const ctaButtons = document.querySelectorAll('.cta-primary');
+        const ctaObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'pulse-glow 2s infinite';
+                }
+            });
+        }, { threshold: 0.5 });
+
+        ctaButtons.forEach(btn => ctaObserver.observe(btn));
+
+        // Parallax effect on grid background
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrolled = window.pageYOffset;
+                    const gridBg = document.querySelector('.grid-background');
+                    if (gridBg) {
+                        gridBg.style.transform = `translateY(${scrolled * 0.3}px)`;
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+    </script>
+</body>
+</html>

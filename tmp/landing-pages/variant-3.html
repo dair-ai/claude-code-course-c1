@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Future of Coding is Here - AI-Powered Development</title>
+    <meta name="description" content="Build faster with autonomous, context-aware AI code generation. Production-ready code, multi-file refactors, and seamless tool integration.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans:wght@400;500;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --white: #FFFFFF;
+            --black: #000000;
+            --electric-blue: #3366FF;
+            --light-gray: #F0F0F0;
+            --vibrant-pink: #FF3366;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background-color: var(--white);
+            color: var(--black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-bottom: 3px solid var(--black);
+            z-index: 1000;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--black);
+            text-decoration: none;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--electric-blue);
+        }
+
+        .nav-cta {
+            background: var(--vibrant-pink);
+            color: var(--white);
+            padding: 12px 28px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 3px solid var(--black);
+            box-shadow: 6px 6px 0 var(--black);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-cta:hover {
+            box-shadow: 3px 3px 0 var(--black);
+            transform: translate(3px, 3px);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 60px;
+            position: relative;
+            padding: 80px 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(48px, 7vw, 92px);
+            font-weight: 800;
+            line-height: 1.05;
+            margin-bottom: 30px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 .highlight {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero h1 .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: -8px;
+            right: -8px;
+            height: 20px;
+            background: var(--electric-blue);
+            z-index: -1;
+            transform: skewX(-3deg);
+        }
+
+        .hero-subheadline {
+            font-size: clamp(18px, 2vw, 24px);
+            font-weight: 500;
+            color: var(--black);
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            background: var(--vibrant-pink);
+            color: var(--white);
+            padding: 20px 48px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            border: 3px solid var(--black);
+            box-shadow: 8px 8px 0 var(--black);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero-cta:hover {
+            box-shadow: 4px 4px 0 var(--black);
+            transform: translate(4px, 4px);
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 600px;
+        }
+
+        /* Geometric Shapes */
+        .geo-shape {
+            position: absolute;
+            border: 3px solid var(--black);
+            box-shadow: 6px 6px 0 var(--black);
+        }
+
+        .geo-circle {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: var(--electric-blue);
+            top: 50px;
+            right: 100px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .geo-square {
+            width: 200px;
+            height: 200px;
+            background: var(--vibrant-pink);
+            bottom: 120px;
+            left: 40px;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        .geo-rect {
+            width: 150px;
+            height: 100px;
+            background: var(--white);
+            top: 200px;
+            left: 180px;
+            z-index: 3;
+            animation: float 7s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .code-snippet {
+            position: absolute;
+            top: 100px;
+            left: 50px;
+            background: var(--black);
+            color: var(--electric-blue);
+            padding: 24px;
+            border: 3px solid var(--black);
+            box-shadow: 8px 8px 0 var(--electric-blue);
+            font-family: 'Source Code Pro', monospace;
+            font-size: 14px;
+            z-index: 5;
+            max-width: 400px;
+            animation: slideIn 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .code-snippet code {
+            display: block;
+            line-height: 1.8;
+        }
+
+        .code-comment {
+            color: #888;
+        }
+
+        .code-keyword {
+            color: var(--vibrant-pink);
+        }
+
+        .code-string {
+            color: var(--electric-blue);
+        }
+
+        /* Diagonal Divider */
+        .diagonal-section {
+            position: relative;
+            background: var(--light-gray);
+            padding: 120px 0;
+            margin-top: 80px;
+            clip-path: polygon(0 80px, 100% 0, 100% calc(100% - 80px), 0 100%);
+            padding-top: 200px;
+            padding-bottom: 200px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+        }
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .features-header h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(36px, 5vw, 64px);
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .features-header p {
+            font-size: 20px;
+            color: var(--black);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .features-grid.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card {
+            background: var(--white);
+            border: 3px solid var(--black);
+            padding: 48px;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 8px 8px 0 var(--black);
+        }
+
+        .feature-card:nth-child(1) {
+            transition-delay: 0.1s;
+        }
+
+        .feature-card:nth-child(2) {
+            transition-delay: 0.2s;
+        }
+
+        .feature-card:nth-child(3) {
+            transition-delay: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0 var(--black);
+        }
+
+        .feature-accent {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            top: -10px;
+            right: -10px;
+            border: 3px solid var(--black);
+        }
+
+        .feature-card:nth-child(1) .feature-accent {
+            background: var(--electric-blue);
+            border-radius: 50%;
+        }
+
+        .feature-card:nth-child(2) .feature-accent {
+            background: var(--vibrant-pink);
+        }
+
+        .feature-card:nth-child(3) .feature-accent {
+            background: var(--electric-blue);
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+            border: 3px solid var(--black);
+        }
+
+        .feature-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--white);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .feature-card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        .feature-card p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--black);
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            background: var(--black);
+            color: var(--white);
+            padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .how-it-works::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(90deg, var(--electric-blue) 2px, transparent 2px),
+                linear-gradient(0deg, var(--electric-blue) 2px, transparent 2px);
+            background-size: 100px 100px;
+            opacity: 0.05;
+        }
+
+        .how-it-works .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .how-it-works h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(36px, 5vw, 64px);
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 80px;
+            letter-spacing: -0.02em;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step {
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step:nth-child(1) {
+            transition-delay: 0.1s;
+        }
+
+        .step:nth-child(2) {
+            transition-delay: 0.2s;
+        }
+
+        .step:nth-child(3) {
+            transition-delay: 0.3s;
+        }
+
+        .step-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--electric-blue);
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .step h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .step p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #CCC;
+        }
+
+        /* Final CTA Section */
+        .final-cta {
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
+            background: var(--white);
+        }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            border: 3px solid var(--light-gray);
+            border-radius: 50%;
+        }
+
+        .final-cta::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            border: 3px solid var(--light-gray);
+        }
+
+        .final-cta .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .final-cta h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(36px, 5vw, 72px);
+            font-weight: 800;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .final-cta p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .final-cta-button {
+            display: inline-block;
+            background: var(--vibrant-pink);
+            color: var(--white);
+            padding: 24px 64px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 20px;
+            border: 3px solid var(--black);
+            box-shadow: 10px 10px 0 var(--black);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .final-cta-button:hover {
+            box-shadow: 5px 5px 0 var(--black);
+            transform: translate(5px, 5px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--black);
+            color: var(--white);
+            padding: 60px 0;
+            border-top: 3px solid var(--electric-blue);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section a {
+            color: #CCC;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-section a:hover {
+            color: var(--electric-blue);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 2px solid #333;
+            color: #888;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .hero-visual {
+                height: 400px;
+                order: -1;
+            }
+
+            .geo-circle {
+                width: 200px;
+                height: 200px;
+                right: 20px;
+            }
+
+            .geo-square {
+                width: 150px;
+                height: 150px;
+                left: 20px;
+            }
+
+            .code-snippet {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-bottom: 20px;
+                max-width: 100%;
+            }
+
+            .diagonal-section {
+                clip-path: polygon(0 40px, 100% 0, 100% calc(100% - 40px), 0 100%);
+                padding-top: 140px;
+                padding-bottom: 140px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            nav .container {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                padding: 32px;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="#" class="logo" aria-label="Home">CODE.AI</a>
+            <a href="#get-started" class="nav-cta">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container" style="display: contents;">
+            <div class="hero-content">
+                <h1>The Future of <span class="highlight">Coding</span> is Here</h1>
+                <p class="hero-subheadline">Autonomous, context-aware code generation that understands your entire codebase and writes production-ready code from natural language.</p>
+                <a href="#get-started" class="hero-cta">Experience the Future</a>
+            </div>
+
+            <div class="hero-visual">
+                <div class="code-snippet" role="img" aria-label="Code example">
+                    <code>
+<span class="code-comment">// Natural language to code</span>
+<span class="code-keyword">agent</span>.<span class="code-keyword">write</span>(<span class="code-string">"Create a REST API<br>with authentication"</span>);
+
+<span class="code-comment">// AI generates complete solution</span>
+<span class="code-keyword">✓</span> routes/auth.js
+<span class="code-keyword">✓</span> middleware/verify.js
+<span class="code-keyword">✓</span> models/user.js
+                    </code>
+                </div>
+                <div class="geo-shape geo-circle" role="presentation"></div>
+                <div class="geo-shape geo-square" role="presentation"></div>
+                <div class="geo-shape geo-rect" role="presentation"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="diagonal-section">
+        <div class="features">
+            <div class="container">
+                <div class="features-header">
+                    <h2>Powerful Features</h2>
+                    <p>Everything you need to accelerate development with AI-powered precision</p>
+                </div>
+
+                <div class="features-grid" id="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-accent" role="presentation"></div>
+                        <div class="feature-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M8 3L4 7l4 4M16 3l4 4-4 4M12 21V3" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>AI Code Generation</h3>
+                        <p>Transform natural language prompts into production-ready code. Our AI understands context, best practices, and your coding style to generate clean, efficient solutions.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-accent" role="presentation"></div>
+                        <div class="feature-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                            </svg>
+                        </div>
+                        <h3>Multi-File Editing</h3>
+                        <p>Handle complex refactors across your entire codebase with confidence. Update dozens of files simultaneously while maintaining consistency and avoiding breaking changes.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-accent" role="presentation"></div>
+                        <div class="feature-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 3v3M12 18v3M3 12h3M18 12h3M6.34 6.34l2.12 2.12M15.54 15.54l2.12 2.12M6.34 17.66l2.12-2.12M15.54 8.46l2.12-2.12" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h3>Tool Integration</h3>
+                        <p>Seamlessly works with git, terminal, APIs, and your existing workflow. Commit changes, run tests, deploy code - all within your natural development process.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step" id="step-1">
+                    <div class="step-number">01</div>
+                    <h3>Describe Your Goal</h3>
+                    <p>Tell the AI what you want to build using natural language. Be as specific or high-level as you need.</p>
+                </div>
+
+                <div class="step" id="step-2">
+                    <div class="step-number">02</div>
+                    <h3>AI Analyzes Context</h3>
+                    <p>The agent reads your codebase, understands dependencies, and plans the optimal implementation strategy.</p>
+                </div>
+
+                <div class="step" id="step-3">
+                    <div class="step-number">03</div>
+                    <h3>Code is Generated</h3>
+                    <p>Production-ready code is written, tested, and integrated into your project with full version control.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta" id="get-started">
+        <div class="container">
+            <h2>Build Faster with AI</h2>
+            <p>Join thousands of developers accelerating their workflow with autonomous code generation</p>
+            <a href="#" class="final-cta-button">Get Started Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#docs">Documentation</a></li>
+                        <li><a href="#api">API Reference</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#careers">Careers</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#tutorials">Tutorials</a></li>
+                        <li><a href="#community">Community</a></li>
+                        <li><a href="#support">Support</a></li>
+                        <li><a href="#status">Status</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                        <li><a href="#security">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 CODE.AI. All rights reserved. Built with autonomous AI.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe features grid
+        const featuresGrid = document.getElementById('features-grid');
+        if (featuresGrid) {
+            observer.observe(featuresGrid);
+        }
+
+        // Observe steps
+        const steps = document.querySelectorAll('.step');
+        steps.forEach(step => {
+            observer.observe(step);
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Parallax effect for geometric shapes
+        let ticking = false;
+
+        function updateShapePositions() {
+            const scrolled = window.pageYOffset;
+            const shapes = document.querySelectorAll('.geo-shape');
+
+            shapes.forEach((shape, index) => {
+                const speed = 0.5 + (index * 0.2);
+                const yPos = -(scrolled * speed);
+                shape.style.transform = `translateY(${yPos}px)`;
+            });
+
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateShapePositions);
+                ticking = true;
+            }
+        });
+
+        // Feature card hover effect - morph accent shapes
+        const featureCards = document.querySelectorAll('.feature-card');
+        featureCards.forEach(card => {
+            const accent = card.querySelector('.feature-accent');
+
+            card.addEventListener('mouseenter', () => {
+                accent.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                accent.style.transform = 'scale(1.2) rotate(15deg)';
+            });
+
+            card.addEventListener('mouseleave', () => {
+                accent.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+
+        // Code snippet typing effect
+        const codeSnippet = document.querySelector('.code-snippet code');
+        if (codeSnippet) {
+            const originalHTML = codeSnippet.innerHTML;
+            codeSnippet.innerHTML = '';
+
+            let charIndex = 0;
+            const typingSpeed = 10;
+
+            function typeCode() {
+                if (charIndex < originalHTML.length) {
+                    codeSnippet.innerHTML = originalHTML.substring(0, charIndex + 1);
+                    charIndex++;
+                    setTimeout(typeCode, typingSpeed);
+                } else {
+                    codeSnippet.innerHTML = originalHTML;
+                }
+            }
+
+            // Start typing after a delay
+            setTimeout(typeCode, 500);
+        }
+    </script>
+</body>
+</html>
